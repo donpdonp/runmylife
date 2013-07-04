@@ -2,3 +2,11 @@ extend layout
 block content
   h2 
     | ActivityStream
+  ul
+    each act in activities
+      li
+        span.verb
+          | #{act.verb}
+        span.object
+          | #{JSON.stringify(act.object)}
+
