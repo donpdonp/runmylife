@@ -13,7 +13,7 @@ r.connect({host:'localhost', port: 28015, db:'activitystream'}, function(err, co
     app.set('view engine', 'jade')
     app.use(express.static(__dirname + '/public'))
     app.get('/',function(req, res){
-      r.table('activity').run(conn, function(err, cursor){
+      r.table('activity').orderBy(r.desc('published')).run(conn, function(err, cursor){
         console.log(req.route.method+" "+req.originalUrl)
         cursor.toArray(function(err, rows){
           res.render('index', {activities:rows});

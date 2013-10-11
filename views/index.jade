@@ -4,9 +4,14 @@ block content
     | ActivityStream
   ul
     each act in activities
-      li
+      li.activity
+        span.published
+          time
+            | #{act.published}
         span.verb
           | #{act.verb}
-        span.object
-          | #{JSON.stringify(act.object)}
+        span.provider
+          | #{act.provider}
+        span.payload
+          | #{JSON.stringify(act)}
 
