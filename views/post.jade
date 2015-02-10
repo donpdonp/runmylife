@@ -1,0 +1,26 @@
+extend layout
+block content
+  h2 
+    | ActivityStream
+
+  pre
+    | { "id": "02844b42-c51c-4852-8e64-347b1e38f280" ,
+    |   "objectType": "activity"
+    |   "verb": "checkin"
+    |   "provider": "canary" ,
+    |   "published": "2014-07-14T02:13:38-07:00" ,
+    |   "payload": {
+    |          "aps": { } ,
+    |          "command": "checkin" ,
+    |          "message": "" ,
+    |          "type": "canary"
+    |       } ,
+    | }
+
+  form(method="post")
+    ul.verblist
+      li Eat
+      li Spend
+    label
+      | verb
+      input

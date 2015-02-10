@@ -10,8 +10,12 @@ li.activity span {
 div.nearby {
   font-size: 75%
 }
-ul.nearby {
+ul {
   list-style-type: none;
 }
-ul.nearby li {
+ul.verblist li {
+  display: inline-block;
+  background-color: #ddd;
+  padding: 0.5em;
+  border-radius: 0.5em;
 }
