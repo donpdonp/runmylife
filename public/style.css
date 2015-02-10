@@ -2,6 +2,16 @@ li.activity span {
   margin-right: 0.5em;
 }
 
-span.payload {
+.connected {
+  font-size: 105%;
+  color: blue;
+}
+
+div.nearby {
   font-size: 75%
+}
+ul.nearby {
+  list-style-type: none;
+}
+ul.nearby li {
 }

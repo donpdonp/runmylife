@@ -12,6 +12,20 @@ block content
           | #{act.verb}
         span.provider
           | #{act.provider}
-        span.payload
-          | #{JSON.stringify(act)}
+        if act.provider == "foursquare"
+          span
+          | #{act['object']['name']}
+        if act.provider == "canary"
+          - var payload = act['payload']
+          - var connected = payload['aps']['connected']
+          if connected
+            span.connected
+              | #{connected['ssid']}
+          - var nearby = payload['aps']['nearby']
+          if nearby
+            div.nearby
+              | NearBy 
+              ul.nearby
+                each ap in nearby
+                  li #{ap.ssid}
 
