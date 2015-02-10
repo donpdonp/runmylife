@@ -1,14 +1,34 @@
 var r = require('rethinkdb')
 var express = require('express');
 var app = express();
+var dbname = 'activitystream'
+var tablename = 'activity'
 
-r.connect({host:'localhost', port: 28015, db:'activitystream'}, function(err, conn) {
-  r.dbCreate('activitystream').run(conn, function(err){})
-  r.tableCreate('activity').run(conn, function(err){if(err){console.log(err)}})
-  //r.table('activity').insert({verb:"checkin", object: {objectType:"place",name:"My Father's Place"}}).run(conn, function(){})
+var opts = {host:'localhost', port: 28015, db:dbname}
+r.connect(opts).then(function(conn) {
+  console.log('connected', opts)
+  r.dbList().run(conn).then(function(list){
+    if(list.indexOf(dbname) == -1) { 
+      console.log('warning: creating database '+dbname)
+      return r.dbCreate('activitystream').run(conn)
+    }
+  })
+  .then(function(){
+    r.tableList().run(conn).then(function(list){
+      if(list.indexOf(tablename) == -1) {
+        console.log('warning: creating table '+tablename)
+        return r.tableCreate(tablename).run(conn)
+      }
+    })
+  }).then(function(){
+    websetup(conn)
+    var port = 6106
+    app.listen(port);
+    console.log('Listening on port '+port);
+  })
+})
 
-  if(err){ console.log(err) } else {
-    console.log('db on')
+function websetup(conn) {
     app.set('views', __dirname + '/views')
     app.set('view engine', 'jade')
     app.use(express.static(__dirname + '/public'))
@@ -22,11 +42,6 @@ r.connect({host:'localhost', port: 28015, db:'activitystream'}, function(err, co
           })
         })
     })
-  }
+}
 
-})
-
-var port = 6106
-app.listen(port);
-console.log('Listening on port '+port);
 
