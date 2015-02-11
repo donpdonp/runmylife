@@ -3,31 +3,40 @@ block content
   h2 
     | ActivityStream
 
-    | Hi #{me}
+  div
+    | Hi, #{me}
+
   pre
     | { "id": "02844b42-c51c-4852-8e64-347b1e38f280" ,
     |   "objectType": "activity"
     |   "verb": "checkin"
     |   "provider": "canary" ,
     |   "published": "2014-07-14T02:13:38-07:00" ,
-    |   "payload": {
-    |          "aps": { } ,
-    |          "command": "checkin" ,
-    |          "message": "" ,
-    |          "type": "canary"
-    |       } ,
+    |   "object": {
+    |          "name": "" ,
+    |          "url": ""
+    |       } 
     | }
 
   form(method="post")
     ul.verblist
-      li Eat
-      li Spend
-    label
-      | verb
-      input(name="verb")
-    label
-      | object
-      input(name="object")
+      li#eat Eat
+      li#spend Spend
+    div
+      label
+        | verb
+        input(name="verb")
+    div
+      label
+        | object
+        input(name="object")
 
     input(type="submit")
+
+  script.
+    jQuery(function(){
+      console.log("ready")
+      $('li#eat').click(function(){console.log('eat')})
+      $('li#spend').click(function(){console.log('spend')})
+    })
 
