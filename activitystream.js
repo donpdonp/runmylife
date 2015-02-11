@@ -62,7 +62,11 @@ function websetup(conn) {
     app.get('/post',function(req, res){
       var secret = req.cookies['indieauth']
       redis.hget('indieauth:donp.org', secret).then(function(me){
-        res.render('post', {me: me} );
+        if(me) {
+          res.render('post', {me: me} );
+        } else {
+          res.redirect("/as")
+        }
       })
     })
     app.post('/post',function(req, res){
