@@ -1,5 +1,10 @@
 var r = require('rethinkdb')
 var express = require('express');
+var bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser')
+var redislib = require('then-redis');
+
+var redis = redislib.createClient();
 var app = express();
 var dbname = 'activitystream'
 var tablename = 'activity'
@@ -41,6 +46,8 @@ function websetup(conn) {
     app.set('views', __dirname + '/views')
     app.set('view engine', 'jade')
     app.use(express.static(__dirname + '/public'))
+    app.use(express.urlencoded())
+    app.use(cookieParser())
     app.get('/',function(req, res){
       r.table(tablename)
        .orderBy(r.desc('published'))
@@ -53,9 +60,19 @@ function websetup(conn) {
         })
     })
     app.get('/post',function(req, res){
-      res.render('post' );
+      var secret = req.cookies['indieauth']
+      redis.hget('indieauth:donp.org', secret).then(function(me){
+        res.render('post', {me: me} );
+      })
     })
     app.post('/post',function(req, res){
+      console.log(req.body)
+      doc = { verb: req.body.verb,
+              object: req.body.object,
+              provider: "as.js",
+              published: (new Date()).toISOString()
+            }
+      r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
       res.redirect('/as?msg=success' );
     })
 }

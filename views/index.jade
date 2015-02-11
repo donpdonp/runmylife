@@ -12,6 +12,9 @@ block content
           | #{act.verb}
         span.provider
           | #{act.provider}
+        if act.object
+          span.object
+            | #{act.object}
         if act.provider == "foursquare"
           span
           | #{act['object']['name']}

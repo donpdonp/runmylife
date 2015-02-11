@@ -3,6 +3,7 @@ block content
   h2 
     | ActivityStream
 
+    | Hi #{me}
   pre
     | { "id": "02844b42-c51c-4852-8e64-347b1e38f280" ,
     |   "objectType": "activity"
@@ -23,4 +24,10 @@ block content
       li Spend
     label
       | verb
-      input
+      input(name="verb")
+    label
+      | object
+      input(name="object")
+
+    input(type="submit")
+
