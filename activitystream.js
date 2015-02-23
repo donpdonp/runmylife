@@ -65,19 +65,26 @@ function websetup(conn) {
         if(me) {
           res.render('post', {me: me} );
         } else {
-          res.redirect("/as")
+          res.redirect('/as?msg=login-first' );
         }
       })
     })
     app.post('/post',function(req, res){
-      console.log(req.body)
-      doc = { verb: req.body.verb,
-              object: req.body.object,
-              provider: "as.js",
-              published: (new Date()).toISOString()
-            }
-      r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
-      res.redirect('/as?msg=success' );
+      var secret = req.cookies['indieauth']
+      redis.hget('indieauth:donp.org', secret).then(function(me){
+        if(me) {
+          doc = { verb: req.body.verb,
+                  object: req.body.object,
+                  provider: "as.js",
+                  actor: me,
+                  published: (new Date()).toISOString()
+                }
+          r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
+          res.redirect('/as?msg=success' );
+        } else {
+          res.redirect("/as")
+        }
+      })
     })
 }
 
