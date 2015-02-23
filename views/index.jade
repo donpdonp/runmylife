@@ -5,6 +5,9 @@ block content
   ul
     each act in activities
       li.activity
+        if act.actor
+          span.actor
+            | #{act.actor}
         span.published
           time
             | #{act.published}
