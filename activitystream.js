@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var redislib = require('then-redis');
+var Promise = require("bluebird")
 
 var redis = redislib.createClient();
 var app = express();
@@ -43,49 +44,53 @@ function webapp(conn){
 }
 
 function websetup(conn) {
-    app.set('views', __dirname + '/views')
-    app.set('view engine', 'jade')
-    app.use(express.static(__dirname + '/public'))
-    app.use(express.urlencoded())
-    app.use(cookieParser())
-    app.get('/',function(req, res){
-      r.table(tablename)
-       .orderBy(r.desc('published'))
-       .limit(20)
-       .run(conn, function(err, cursor){
-          console.log(req.route.method+" "+req.originalUrl)
-          cursor.toArray(function(err, rows){
-            res.render('index', {activities:rows});
+  app.set('views', __dirname + '/views')
+  app.set('view engine', 'jade')
+  app.use(express.static(__dirname + '/public'))
+  app.use(express.urlencoded())
+  app.use(cookieParser())
+
+  app.get('/',function(req, res){
+    r.table(tablename)
+     .orderBy(r.desc('published'))
+     .limit(20)
+     .run(conn, function(err, cursor){
+        console.log(req.route.method+" "+req.originalUrl)
+        cursor.toArray(function(err, rows){
+          redis.hget('indieauth:donp.org', req.cookies['indieauth']).then(function(me){
+            res.render('index', {activities:rows, me: me});
           })
         })
-    })
-    app.get('/post',function(req, res){
-      var secret = req.cookies['indieauth']
-      redis.hget('indieauth:donp.org', secret).then(function(me){
-        if(me) {
-          res.render('post', {me: me} );
-        } else {
-          res.redirect('/as?msg=login-first' );
-        }
       })
+  })
+  app.get('/post',function(req, res){
+    var secret = req.cookies['indieauth']
+    redis.hget('indieauth:donp.org', secret).then(function(me){
+      if(me) {
+        res.render('post', {me: me} );
+      } else {
+        res.redirect('/as?msg=login-first' );
+      }
     })
-    app.post('/post',function(req, res){
-      var secret = req.cookies['indieauth']
-      redis.hget('indieauth:donp.org', secret).then(function(me){
-        if(me) {
-          doc = { verb: req.body.verb,
-                  object: req.body.object,
-                  provider: "as.js",
-                  actor: me,
-                  published: (new Date()).toISOString()
-                }
-          r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
-          res.redirect('/as?msg=success' );
-        } else {
-          res.redirect("/as")
-        }
-      })
-    })
+  })
+  app.post('/post',function(req, res){
+    var secret = req.cookies['indieauth']
+    redis.hget('indieauth:donp.org', secret).then(function(me){
+      if(me) {
+        doc = { verb: req.body.verb,
+                 object: req.body.object,
+                 provider: "as.js",
+                 actor: me,
+                 published: (new Date()).toISOString()
+               }
+         r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
+         res.redirect('/as?msg=success' );
+       } else {
+         res.redirect("/as")
+       }
+     })
+   })
+
 }
 
 

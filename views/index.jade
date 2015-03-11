@@ -3,35 +3,51 @@ block content
   h2 
     | ActivityStream
   ul
+    - var last_day = "" 
     each act in activities
+      - if(last_day.substr(0,10) != act.published.substr(0,10))
+        li.daybar
+          time(data-format="yyyy-MMM-dd" datetime="#{act.published}")
+        - last_day = act.published
+      pre(style="display:none")
+        !{JSON.stringify(act, null, 2)}
       li.activity
-        if act.actor
-          span.actor
-            | #{act.actor}
-        span.published
-          time
-            | #{act.published}
-        span.verb
-          | #{act.verb}
-        span.provider
-          | #{act.provider}
-        if act.object
-          span.object
-            | #{act.object}
-        if act.provider == "foursquare"
-          span
-          | #{act['object']['name']}
-        if act.provider == "canary"
-          - var payload = act['payload']
-          - var connected = payload['aps']['connected']
-          if connected
-            span.connected
-              | #{connected['ssid']}
-          - var nearby = payload['aps']['nearby']
-          if nearby
-            div.nearby
-              | NearBy 
-              ul.nearby
-                each ap in nearby
-                  li #{ap.ssid}
+        div.rowbottom
+          span.published
+            time(data-format="hh:mmtt" datetime="#{act.published}")
+              | #{act.published}
+          | 
 
+          span.verb
+            | #{act.verb}
+          | 
+          if act.object
+            span.object
+              | #{act.object}
+          | 
+          if act.provider == "foursquare"
+            span
+            | #{act['object']['name']}
+          if act.provider == "canary"
+            - var payload = act['payload']
+            - var connected = payload['aps']['connected']
+            if connected
+              span.connected
+                | #{connected['ssid']}
+            - var nearby = payload['aps']['nearby']
+            if nearby
+              div.nearby
+                | NearBy 
+                ul.nearby
+                  each ap in nearby
+                    li #{ap.ssid}
+        div.rowtop
+          if act.actor
+            span.actor
+              | #{act.actor}
+          | 
+          span.provider
+            | #{act.provider}
+
+  script.
+    time_fixup()

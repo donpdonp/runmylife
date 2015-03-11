@@ -6,6 +6,23 @@ block content
   div
     | Hi, #{me}
 
+  form(method="post")
+    ul.verblist
+      li#eat Eat
+      li#spend Spend
+    div.verbinput
+      label
+        | verb
+        input(name="verb")
+    div.verbinput
+      label
+        | object
+        input(name="object")
+
+    input(type="submit" value="Create Activity")
+
+  div(style="margin-top: 1em")
+    | Sample activitystream json
   pre
     | { "id": "02844b42-c51c-4852-8e64-347b1e38f280" ,
     |   "objectType": "activity"
@@ -18,25 +35,16 @@ block content
     |       } 
     | }
 
-  form(method="post")
-    ul.verblist
-      li#eat Eat
-      li#spend Spend
-    div
-      label
-        | verb
-        input(name="verb")
-    div
-      label
-        | object
-        input(name="object")
-
-    input(type="submit")
 
   script.
     jQuery(function(){
       console.log("ready")
-      $('li#eat').click(function(){console.log('eat')})
-      $('li#spend').click(function(){console.log('spend')})
+      $('li#eat').click(function(evt){doverb('eat')})
+      $('li#spend').click(function(){doverb('spend')})
     })
+    
+    function doverb(verb) {
+      $("input[name='verb']").val(verb)
+      $("input[name='object']").focus()
+    }
 

@@ -1,5 +1,33 @@
-li.activity span {
+li {
+  margin-bottom: 0.5em;
+  display: flex;
+  justify-content: space-between;
+}
+li .rowtop {
+  color: #999;
+  font-size: 90%;
+}
+
+li .rowbottom {
+  margin-left: 0.5em;
+  font-size: 105%;
+}
+
+li.activity {
   margin-right: 0.5em;
+}
+
+.published {
+  color: #000;
+}
+
+span.actor {
+  color: #377;
+}
+
+span.verb {
+  color: brown;
+  font-size: 110%;
 }
 
 .connected {
@@ -10,12 +38,24 @@ li.activity span {
 div.nearby {
   font-size: 75%
 }
+
+/* post */
 ul {
   list-style-type: none;
 }
 ul.verblist li {
   display: inline-block;
   background-color: #ddd;
-  padding: 0.5em;
+  padding: 0.8em;
+  margin: 0.3em;
   border-radius: 0.5em;
+  font-size: 120%;
+}
+
+.verbinput {
+  font-size: 180%;
+}
+
+.daybar {
+  background-color: #ddd;
 }
