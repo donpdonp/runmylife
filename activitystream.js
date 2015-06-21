@@ -19,7 +19,7 @@ function dbsetup(opts, webapp) {
   return r.connect(opts).then(function(conn) {
     console.log('connected', opts)
     r.dbList().run(conn).then(function(list){
-      if(list.indexOf(dbname) == -1) { 
+      if(list.indexOf(dbname) == -1) {
         console.log('warning: creating database '+dbname)
         return r.dbCreate('activitystream').run(conn)
       }
@@ -77,20 +77,29 @@ function websetup(conn) {
     var secret = req.cookies['indieauth']
     redis.hget('indieauth:donp.org', secret).then(function(me){
       if(me) {
+        var time = req.body.datetime || (new Date()).toISOString()
         doc = { verb: req.body.verb,
-                 object: req.body.object,
-                 provider: "as.js",
-                 actor: me,
-                 published: (new Date()).toISOString()
+                object: { name: req.body.name },
+                provider: "as.js",
+                actor: me,
+                published: time
                }
+         if(req.body.price) {doc.object.price = parseFloat(req.body.price) }
          r.table(tablename).insert(doc).run(conn, function(err,res){ console.log(err, res)})
-         res.redirect('/as?msg=success' );
+         res.redirect('/as?msg=posted' );
        } else {
          res.redirect("/as")
        }
      })
    })
+  app.post('/delete',function(req, res){
+    var secret = req.cookies['indieauth']
+    redis.hget('indieauth:donp.org', secret).then(function(me){
+      if(me) {
+         r.table(tablename).get(req.body.id).delete().run(conn, function(err,res){ console.log(err, res)})
+         res.redirect('/as?msg=deleted' );
+      }
+    })
+  })
 
 }
-
-

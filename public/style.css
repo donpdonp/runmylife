@@ -59,3 +59,8 @@ ul.verblist li {
 .daybar {
   background-color: #ddd;
 }
+
+form .submit { margin: 1em 3em; }
+form input { font-size: 90%; }
+form input[name='verb'] { width: 4em; }
+div.timeinput input { width: 6em }

@@ -1,25 +1,37 @@
 extend layout
 block content
-  h2 
-    | ActivityStream
+  h2
+    | ActivityStream Post
 
   div
     | Hi, #{me}
 
-  form(method="post")
+  form#act(method="post")
+    div.timeinput
+      input(name="datetime" style="display: none")
+      label
+        | date
+        input(name="date")
+      label
+        | time
+        input(name="time")
     ul.verblist
       li#eat Eat
-      li#spend Spend
+      li#buy Buy
     div.verbinput
       label
         | verb
         input(name="verb")
     div.verbinput
       label
-        | object
-        input(name="object")
+        | name
+        input(name="name")
+      div.price(style="display: none")
+        | price $
+        input(name="price")
 
-    input(type="submit" value="Create Activity")
+    div.submit
+      input(type="submit" value="Create Activity")
 
   div(style="margin-top: 1em")
     | Sample activitystream json
@@ -32,19 +44,36 @@ block content
     |   "object": {
     |          "name": "" ,
     |          "url": ""
-    |       } 
+    |       }
     | }
 
 
   script.
     jQuery(function(){
       console.log("ready")
-      $('li#eat').click(function(evt){doverb('eat')})
-      $('li#spend').click(function(){doverb('spend')})
+      var now = new XDate()
+      $("form#act input[name='date']").attr('value', now.toString('yyyy-MM-dd'))
+      $("form#act input[name='time']").attr('value', now.toString('HH:mm'))
+
+      $('li#eat').click(function(evt){
+        doverb('eat')
+        $('div.price').hide()
+      })
+      $('li#buy').click(function(){
+        doverb('buy')
+        $('div.price').show()
+      })
+
+      $('#act').submit(function(evt){
+        var localtime = $("form#act input[name='date']").val() + "T" +
+                        $("form#act input[name='time']").val()
+        $("form#act input[name='datetime']").val(new Date(localtime).toISOString())
+        var form = evt.target
+        console.log(form.elements)
+      })
     })
-    
+
     function doverb(verb) {
       $("input[name='verb']").val(verb)
-      $("input[name='object']").focus()
+      $("input[name='name']").focus()
     }
-

@@ -3,12 +3,20 @@ block content
   h2 
     | ActivityStream
   ul
-    - var last_day = "" 
+    - var last_day = ""
+    - var totals = {}
     each act in activities
-      - if(last_day.substr(0,10) != act.published.substr(0,10))
-        li.daybar
+      - var today = new Date(act.published)
+      - var this_day = today.getFullYear()
+      - this_day = this_day + (today.getMonth() < 9 ? "0" : "")
+      - this_day = this_day + (today.getMonth()+1) 
+      - this_day = this_day + (today.getDate() < 9 ? "0" : "")
+      - this_day = this_day + (today.getDate()+1) 
+      - if(last_day != this_day)
+        li.daybar(id="#{this_day}")
           time(data-format="yyyy-MMM-dd" datetime="#{act.published}")
-        - last_day = act.published
+          span.total
+        - last_day = this_day
       pre(style="display:none")
         !{JSON.stringify(act, null, 2)}
       li.activity
@@ -23,7 +31,15 @@ block content
           | 
           if act.object
             span.object
-              | #{act.object}
+              - if (typeof act.object === "object")
+                | #{act.object.name}
+                - if (act.object.price)
+                  |  $#{act.object.price}
+                  - if (!totals[this_day])
+                    - totals[this_day] = 0
+                  - totals[this_day] = totals[this_day] + act.object.price
+              - else
+                | #{act.object}
           | 
           if act.provider == "foursquare"
             span
@@ -48,6 +64,16 @@ block content
           | 
           span.provider
             | #{act.provider}
+          form(action="delete" method="post" style="display:inline")
+            input(name="id" value="#{act.id}" type="hidden")
+            input(type="submit" value="x")
+
 
   script.
     time_fixup()
+    var totals = !{JSON.stringify(totals)}
+    for(var total in totals) {
+      var id = '#'+total+' .total'
+      var amount = totals[total]
+      $(id).html('$'+amount)
+    }
