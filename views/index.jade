@@ -75,5 +75,5 @@ block content
     for(var total in totals) {
       var id = '#'+total+' .total'
       var amount = totals[total]
-      $(id).html('$'+amount)
+      $(id).html('$'+amount.toFixed(2))
     }
