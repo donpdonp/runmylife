@@ -15,7 +15,7 @@ app.locals.pretty = true;
 
 dbsetup(opts).then(webapp)
 
-function dbsetup(opts, webapp) {
+function dbsetup(opts) {
   return r.connect(opts).then(function(conn) {
     console.log('connected', opts)
     r.dbList().run(conn).then(function(list){
