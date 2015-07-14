@@ -1,7 +1,8 @@
 extend layout
 block content
   h2
-    | ActivityStream Post
+    a(href="/as/") ActivityStream
+    |  Post
 
   div
     | Hi, #{me}
@@ -65,11 +66,12 @@ block content
       })
 
       $('#act').submit(function(evt){
+        var tz = "-0" + ((new Date()).getTimezoneOffset() / 60) + ":00"
         var localtime = $("form#act input[name='date']").val() + "T" +
-                        $("form#act input[name='time']").val()
-        $("form#act input[name='datetime']").val(new Date(localtime).toISOString())
+                        $("form#act input[name='time']").val() + tz
+        var isotime = new Date(localtime).toISOString()
+        $("form#act input[name='datetime']").val(isotime)
         var form = evt.target
-        console.log(form.elements)
       })
     })
 
