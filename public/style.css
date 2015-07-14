@@ -28,6 +28,11 @@ span.actor {
 span.verb {
   color: brown;
   font-size: 110%;
+  margin: 0 0.4em;
+}
+
+span.provider {
+  margin: 0 0.4em;
 }
 
 .connected {
