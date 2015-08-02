@@ -1,7 +1,12 @@
 extend layout
 block content
-  h2 
+  h2(style='margin-bottom: 0')
     | ActivityStream
+  div
+    | #{days} days
+    | (#{start.getFullYear()}-#{start.getMonth()}-#{start.getDate()}
+    | #{stop.getFullYear()}-#{stop.getMonth()}-#{stop.getDate()})
+    | #{activities.length} entries
   ul
     - var last_day = ""
     - var totals = {}

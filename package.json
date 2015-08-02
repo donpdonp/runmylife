@@ -3,6 +3,7 @@
     "rethinkdb":"*",
     "express":"3.x",
     "jade":"*",
+    "xdate":"*",
     "body-parser":"*",
     "cookie-parser":"*",
     "then-redis":"*"

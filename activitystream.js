@@ -4,11 +4,13 @@ var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var redislib = require('then-redis');
 var Promise = require("bluebird")
+var XDate = require("xdate")
 
 var redis = redislib.createClient();
 var app = express();
 var dbname = 'activitystream'
 var tablename = 'activity'
+var indexname = 'published'
 
 var opts = {host:'localhost', port: 28015, db:dbname}
 app.locals.pretty = true;
@@ -32,6 +34,14 @@ function dbsetup(opts, webapp) {
         }
       })
     })
+    .then(function(){
+      r.table(tablename).indexList().run(conn).then(function(list){
+        if(list.indexOf(indexname) == -1) {
+          console.log('warning: creating index '+indexname)
+          return r.table(tablename).indexCreate(indexname).run(conn)
+        }
+      })
+    })
     return conn
   })
 }
@@ -51,14 +61,20 @@ function websetup(conn) {
   app.use(cookieParser())
 
   app.get('/',function(req, res){
+    var days = 8
+    if(req.query.days){ days = req.query.days }
+    var stop = new Date()
+    var start = new Date(stop - 1000*60*60*24*days)
+
     r.table(tablename)
+     .between(start.toISOString(), stop.toISOString(), {index: 'published', left_bound: 'open'})
      .orderBy(r.desc('published'))
-     .limit(20)
      .run(conn, function(err, cursor){
+        if(err){ console.log(err) }
         console.log(req.route.method+" "+req.originalUrl)
         cursor.toArray(function(err, rows){
           redis.hget('indieauth:donp.org', req.cookies['indieauth']).then(function(me){
-            res.render('index', {activities:rows, me: me});
+            res.render('index', {activities:rows, me: me, start: start, stop: stop, days: days});
           })
         })
       })
