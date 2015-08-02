@@ -14,9 +14,9 @@ block content
       - var today = new Date(act.published)
       - var this_day = today.getFullYear()
       - this_day = this_day + (today.getMonth() < 9 ? "0" : "")
-      - this_day = this_day + (today.getMonth()+1) 
+      - this_day = this_day + (today.getMonth()+1)
       - this_day = this_day + (today.getDate() < 9 ? "0" : "")
-      - this_day = this_day + (today.getDate()+1) 
+      - this_day = this_day + (today.getDate()+1)
       - if(last_day != this_day)
         li.daybar(id="#{this_day}")
           time(data-format="yyyy-MMM-dd" datetime="#{act.published}")
@@ -29,11 +29,8 @@ block content
           span.published
             time(data-format="hh:mmtt" datetime="#{act.published}")
               | #{act.published}
-          | 
-
           span.verb
             | #{act.verb}
-          | 
           if act.object
             span.object
               - if (typeof act.object === "object")
@@ -45,7 +42,6 @@ block content
                   - totals[this_day] = totals[this_day] + act.object.price
               - else
                 | #{act.object}
-          | 
           if act.provider == "foursquare"
             span
             | #{act['object']['name']}
@@ -58,7 +54,7 @@ block content
             - var nearby = payload['aps']['nearby']
             if nearby
               div.nearby
-                | NearBy 
+                | NearBy
                 ul.nearby
                   each ap in nearby
                     li #{ap.ssid}
@@ -66,7 +62,6 @@ block content
           if act.actor
             span.actor
               | #{act.actor}
-          | 
           span.provider
             | #{act.provider}
           form(action="delete" method="post" style="display:inline")
