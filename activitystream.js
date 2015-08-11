@@ -49,7 +49,7 @@ function dbsetup(opts) {
 function webapp(conn){
   websetup(conn)
   var port = 6106
-  app.listen(port);
+  app.listen(port, 'localhost');
   console.log('Listening on port '+port);
 }
 
