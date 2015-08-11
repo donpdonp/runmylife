@@ -7,6 +7,12 @@ block content
     | (#{start.getFullYear()}-#{start.getMonth()}-#{start.getDate()}
     | #{stop.getFullYear()}-#{stop.getMonth()}-#{stop.getDate()})
     | #{activities.length} entries
+  div(style="display: flex")
+    div(id="gauge1" class="gauge")
+    div(id="gauge2" class="gauge")
+    div(id="gauge3" class="gauge")
+  script.
+    gauge_go()
   ul
     - var last_day = ""
     - var totals = {}
