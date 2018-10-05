@@ -1,7 +1,7 @@
 extend layout
 block content
   h2
-    a(href="/as/") ActivityStream
+    a(href="/") ActivityStream
     |  Post
 
   div
@@ -29,7 +29,7 @@ block content
         input(name="name")
       div.price(style="display: none")
         | price $
-        input(name="price")
+        input(name="price" type="number")
 
     div.submit
       input(type="submit" value="Create Activity")

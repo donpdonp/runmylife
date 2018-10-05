@@ -1,10 +1,14 @@
-{ "dependencies" : { 
-    "bluebird":"*",
-    "rethinkdb":"*",
-    "express":"3.x",
-    "jade":"*",
-    "xdate":"*",
-    "body-parser":"*",
-    "cookie-parser":"*",
-    "then-redis":"*"
-  } }
+{
+    "dependencies": {
+        "bluebird": "*",
+        "body-parser": "*",
+        "cookie-parser": "*",
+        "express": "3.x",
+        "jade": "*",
+        "redis": "^2.8.0",
+        "rethinkdb": "*",
+        "then-redis": "^2.0.1",
+        "vue": "^2.5.17",
+        "xdate": "*"
+    }
+}

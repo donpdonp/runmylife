@@ -47,7 +47,9 @@ div.nearby {
 /* post */
 ul {
   list-style-type: none;
+  padding: 0 1em;
 }
+
 ul.verblist li {
   display: inline-block;
   background-color: #ddd;

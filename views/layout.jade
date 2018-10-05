@@ -10,9 +10,15 @@ html(ng-app="as")
     script(src='justgage.1.0.1.min.js')
     link(rel='stylesheet', href='style.css')
   body
-    if me
-      div(style="float:right")
-        a(href="/as/post") 
+    div.navblock(style="float:right")
+      if me
+        a(href="/post") 
          button Post
         span(href="/as/post") #{me}
+      else
+        form(action="https://indieauth.com/auth" method="get" id="authform")
+          input(id="indie_auth_url" type="text" name="me" placeholder="domain")
+          input(type="hidden" name="client_id" value="http://rml.donp.org")
+          input(type="hidden" name="redirect_uri" value="http://rml.donp.org/auth")
+
     block content
